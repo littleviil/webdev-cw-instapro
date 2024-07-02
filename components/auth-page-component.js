@@ -49,13 +49,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                
               </div>
           </div>
-      </div>    
-`;
+      </div>`;
 
     appEl.innerHTML = appHtml;
-
-    // Не вызываем перерендер, чтобы не сбрасывалась заполненная форма
-    // Точечно обновляем кусочек дом дерева
     const setError = (message) => {
       appEl.querySelector(".form-error").textContent = message;
     };
@@ -95,11 +91,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         loginUser({
           login: login,
           password: password,
-        })
-          .then((user) => {
+        }).then((user) => {
             setUser(user.user);
-          })
-          .catch((error) => {
+          }).catch((error) => {
             console.warn(error);
             setError(error.message);
           });
@@ -115,12 +109,10 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           alert("Введите логин");
           return;
         }
-
         if (!password) {
           alert("Введите пароль");
           return;
         }
-
         if (!imageUrl) {
           alert("Не выбрана фотография");
           return;
@@ -131,17 +123,14 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           password: password,
           name: name,
           imageUrl,
-        })
-          .then((user) => {
+        }).then((user) => {
             setUser(user.user);
-          })
-          .catch((error) => {
+          }).catch((error) => {
             console.warn(error);
             setError(error.message);
           });
       }
     });
-
     document.getElementById("toggle-button").addEventListener("click", () => {
       isLoginMode = !isLoginMode;
       renderForm();

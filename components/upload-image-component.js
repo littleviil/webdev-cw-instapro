@@ -23,11 +23,9 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
                 />
                 Выберите фото
             </label>
-          
       `
       }
-  </div>
-`;
+  </div>`;
 
     const fileInputElement = element.querySelector(".file-upload-input");
 
@@ -44,7 +42,6 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
         });
       }
     });
-
     element
       .querySelector(".file-upload-remove-button")
       ?.addEventListener("click", () => {
@@ -53,6 +50,5 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
         render();
       });
   };
-
   render();
 }

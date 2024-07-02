@@ -196,3 +196,13 @@
   width: 100%;
   text-align: center;
 }
+
+.user-info{
+  display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 30px;
+  &__user-image{
+    height: 100px;
+  }
+}

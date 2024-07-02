@@ -166,7 +166,6 @@ export function getPostsWithToken() {
       if (response.status === 401) {
         throw new Error("Нет авторизации");
       }
-
       return response.json();
     })
     .then((data) => {
