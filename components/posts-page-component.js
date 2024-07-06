@@ -2,7 +2,7 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { goToPage } from "../index.js";
 import { sanitizeHTML, handleLike } from "../helpers.js";
-import { formatDistance } from 'date-fns';
+import { formatDistance } from "date-fns";
 
 export function renderPostsPageComponent({ appEl, posts }) {
   const renderPost = (post) => {
@@ -112,5 +112,5 @@ export const formatDate = (dateString) => {
   const date = new Date(dateString);
   const now = new Date();
   const diffInMs = now - date;
-  return `${duration(Math.round(diffInMs / (1000 * 60)))} минут назад`;
+  return `${formatDistance(Math.round(diffInMs / (1000 * 60)))} минут назад`;
 };
