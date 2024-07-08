@@ -103,6 +103,17 @@
   margin-top: 5px;
 }
 
+.user-info{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+  &:__user-image{
+    width: 100px;
+    height: 100px;
+  }
+}
+
 .post-date {
   color: #8a8a8a;
 }
