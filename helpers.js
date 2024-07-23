@@ -1,6 +1,6 @@
-import { getLike, getDislike, getPostsWithToken } from './api.js';
-import { appEl, getToken, setPosts } from './index.js';
-import { renderPostsPageComponent, updateLikeButton } from './components/posts-page-component.js';
+import { getLike, getDislike, getPostsWithToken, getPosts } from './api.js';
+import { appEl, getToken, setPosts, renderApp} from './index.js';
+import { renderPost, renderPostsPageComponent, updateLikeButton } from './components/posts-page-component.js';
 
 export function saveUserToLocalStorage(user) {
   window.localStorage.setItem("user", JSON.stringify(user));
@@ -27,18 +27,15 @@ export const sanitizeHTML = (htmlString) => {
 };
 
 export function handleLike(postId, isLiked) {
-  
+  console.log(isLiked);
   const token = getToken(); 
   if (isLiked) {
     return getDislike(postId, { token })
       .then((post) => {        
-        const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
-        if (likeButton) {
-          const likeImage = likeButton.querySelector('img');
-          likeImage.src = './assets/images/like-not-active.svg'; 
-          likeButton.dataset.liked = 'false'; 
-        }
-        return post;
+        getPosts({token}).then((data) => {
+          setPosts(data);
+          renderApp();
+        });
       })
       .catch((error) => {
         console.error('Ошибка при дизлайке:', error);
@@ -46,22 +43,12 @@ export function handleLike(postId, isLiked) {
       });
   } else {
     return getLike(postId, { token })
-      .then((post) => {        
-        const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
-        if (likeButton) {
-          const likeImage = likeButton.querySelector('img');
-          likeImage.src = './assets/images/like-active.svg'; 
-          likeButton.dataset.liked = 'true'; 
-        }
-        return post;
-      })
-      .then(() => {
-        return getPostsWithToken(); 
-      })
-      .then((newPosts) => {
-        setPosts(newPosts); 
-        updateLikeButton(postId, true);
-      })
+    .then((post) => {        
+      getPosts({token}).then((data) => {
+        setPosts(data);
+        renderApp();
+      });
+    })
       .catch((error) => {
         console.error('Ошибка при лайке:', error);
         throw error; 

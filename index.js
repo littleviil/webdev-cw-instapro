@@ -95,7 +95,7 @@ export const goToPage = (newPage, data) => {
   throw new Error("страницы не существует");
 };
 
-const renderApp = () => {
+export const renderApp = () => {
   console.log('renderApp called with page:', page);
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
