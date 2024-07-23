@@ -5,49 +5,49 @@ import { sanitizeHTML, handleLike } from "../helpers.js";
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from "date-fns/locale/ru";
 
-export const renderPost = (post) => {
-  const isLiked = post.isLiked ? 'true' : 'false';
-  const likesCount = post.likes ? post.likes.length : 0;
-  console.log(post);
-  let likesText = "Нравится:";
-  if (likesCount === 0) {
-    likesText += " 0";
-  } else if (likesCount === 1) {
-    likesText += ` ${sanitizeHTML(post.likes[0].name)}`;
-  } else {
-    likesText += ` ${sanitizeHTML(post.likes[0].name)} и еще ${likesCount - 1}`;
-  }
-
-  const postHtml = `
-    <li class="post">
-      <div class="post-header" data-user-id="${post.user.id}">
-        <img src="${post.user.imageUrl}" class="post-header__user-image">
-        <p class="post-header__user-name">${sanitizeHTML(post.user.name)}</p>
-      </div>
-      <div class="post-image-container">
-        <img class="post-image" src="${post.imageUrl}">
-      </div>
-      <div class="post-likes">
-        <button data-post-id="${post.id}" data-liked="${isLiked}" class="like-button">
-          <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg">
-        </button>
-        <p class="post-likes-text">
-          ${likesText}
-        </p>
-      </div>
-      <p class="post-text">
-        <span class="user-name">${sanitizeHTML(post.user.name)}</span>
-        ${sanitizeHTML(post.description)}
-      </p>
-      <p class="post-date">
-       ${formatDate(post.createdAt)}
-      </p>
-    </li>
-  `;
-  return postHtml;
-};
 export function renderPostsPageComponent({ appEl, posts }) {
 
+  const renderPost = (post) => {
+    const isLiked = post.isLiked ? 'true' : 'false';
+    const likesCount = post.likes ? post.likes.length : 0;
+    let likesText = "Нравится:";
+    if (likesCount === 0) {
+      likesText += " 0";
+    } else if (likesCount === 1) {
+      likesText += ` ${sanitizeHTML(post.likes[0].name)}`;
+    } else {
+      likesText += ` ${sanitizeHTML(post.likes[0].name)} и еще ${likesCount - 1}`;
+    }
+  
+    const postHtml = `
+      <li class="post">
+        <div class="post-header" data-user-id="${post.user.id}">
+          <img src="${post.user.imageUrl}" class="post-header__user-image">
+          <p class="post-header__user-name">${sanitizeHTML(post.user.name)}</p>
+        </div>
+        <div class="post-image-container">
+          <img class="post-image" src="${post.imageUrl}">
+        </div>
+        <div class="post-likes">
+          <button data-post-id="${post.id}" data-liked="${isLiked}" class="like-button">
+            <img src="./assets/images/${post.isLiked ? 'like-active' : 'like-not-active'}.svg">
+          </button>
+          <p class="post-likes-text">
+            ${likesText}
+          </p>
+        </div>
+        <p class="post-text">
+          <span class="user-name">${sanitizeHTML(post.user.name)}</span>
+          ${sanitizeHTML(post.description)}
+        </p>
+        <p class="post-date">
+         ${formatDate(post.createdAt)}
+        </p>
+      </li>
+    `;
+    return postHtml;
+  };
+  
   const appHtml = `
     <div class="page-container">
       <div class="header-container"></div>

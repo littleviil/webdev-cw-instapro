@@ -2,7 +2,6 @@ import { renderHeaderComponent } from "./header-component.js";
 import { formatDate, initLikeButtonListener } from "./posts-page-component.js";
 import { handleLike, sanitizeHTML } from "../helpers.js";
 
-
 export function renderUserPageComponent({ appEl, posts }) {
   const renderUserInfo = (user) => {
     const userInfoHtml = `
@@ -37,6 +36,7 @@ export function renderUserPageComponent({ appEl, posts }) {
         ${sanitizeHTML(post.description)}
       </div>
       <p class="post-date">
+        ${formatDate(post.createdAt)}
       </p>
       <div class="post-likes">
         <button data-post-id="${post.id}" data-liked="${post.isLiked ? 'true' : 'false'}" class="like-button">
@@ -50,7 +50,6 @@ export function renderUserPageComponent({ appEl, posts }) {
   `;
   return postHtml;
 };
-
   
   const appHtml = `
     <div class="page-container">
