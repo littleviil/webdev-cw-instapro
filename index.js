@@ -21,6 +21,7 @@ import {
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
+export const appEl = document.getElementById("app");
 
 export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : null;
@@ -72,7 +73,6 @@ export const goToPage = (newPage, data) => {
     }
 
     if (newPage === USER_POSTS_PAGE) {
-      // TODO: реализовать получение постов юзера из API
       return getUserPosts({id: data.userId})
       .then((newPosts) => {
         console.log('getUserPosts resolved:', newPosts);
@@ -97,7 +97,6 @@ export const goToPage = (newPage, data) => {
 
 const renderApp = () => {
   console.log('renderApp called with page:', page);
-  const appEl = document.getElementById("app");
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
       appEl,
@@ -138,7 +137,6 @@ const renderApp = () => {
   }
 
   if (page === USER_POSTS_PAGE) {
-    //передать id пользователя или передать параметром режим просмотра (true, false)
     return renderUserPageComponent({
       appEl,
       posts

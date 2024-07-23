@@ -1,6 +1,6 @@
 import { getLike, getDislike, getPostsWithToken } from './api.js';
-import { getToken, setPosts } from './index.js';
-import { updateLikeButton } from './components/posts-page-component.js';
+import { appEl, getToken, setPosts } from './index.js';
+import { renderPostsPageComponent, updateLikeButton } from './components/posts-page-component.js';
 
 export function saveUserToLocalStorage(user) {
   window.localStorage.setItem("user", JSON.stringify(user));
@@ -28,7 +28,7 @@ export const sanitizeHTML = (htmlString) => {
 
 export function handleLike(postId, isLiked) {
   
-  const token = getToken();
+  const token = getToken(); 
   if (isLiked) {
     return getDislike(postId, { token })
       .then((post) => {        

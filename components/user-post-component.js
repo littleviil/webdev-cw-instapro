@@ -37,7 +37,6 @@ export function renderUserPageComponent({ appEl, posts }) {
         ${sanitizeHTML(post.description)}
       </div>
       <p class="post-date">
-        ${formatDate(post.createdAt)}
       </p>
       <div class="post-likes">
         <button data-post-id="${post.id}" data-liked="${post.isLiked ? 'true' : 'false'}" class="like-button">
@@ -52,7 +51,6 @@ export function renderUserPageComponent({ appEl, posts }) {
   return postHtml;
 };
 
-  formatDate();
   
   const appHtml = `
     <div class="page-container">
