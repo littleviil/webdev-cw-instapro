@@ -39,13 +39,13 @@ export function getUserPosts({id}) {
 
 export function getUserId() {
   const user = getUserFromLocalStorage(); 
+  console.log('Пользователь:', user);
   if (user) {
     return user.id;
   } else {
     throw new Error('Пользователь не авторизован');
   }
 }
-
 export function getUsername() {
   const userString = localStorage.getItem('user');
   const user = JSON.parse(userString);

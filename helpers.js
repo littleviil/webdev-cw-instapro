@@ -1,4 +1,4 @@
-import { getLike, getDislike, getPostsWithToken, getPosts } from './api.js';
+import { getLike, getDislike, getPostsWithToken, getPosts, getUserId, getUserPosts } from './api.js';
 import { appEl, getToken, setPosts, renderApp} from './index.js';
 import { renderPost, renderPostsPageComponent, updateLikeButton } from './components/posts-page-component.js';
 
@@ -27,28 +27,31 @@ export const sanitizeHTML = (htmlString) => {
 };
 
 export function handleLike(postId, isLiked) {
-  console.log(isLiked);
-  const token = getToken(); 
+  const token = getToken();
+  const userId = getUserId();
+
+  if (!userId) {
+    console.error('ID пользователя не найден');
+    return;
+  }
+
+  const updatePosts = () => {
+    return getUserPosts({ id: userId }).then((data) => {
+      setPosts(data);
+      renderApp();
+    });
+  };
+
   if (isLiked) {
     return getDislike(postId, { token })
-      .then((post) => {        
-        getPosts({token}).then((data) => {
-          setPosts(data);
-          renderApp();
-        });
-      })
+      .then(updatePosts)
       .catch((error) => {
         console.error('Ошибка при дизлайке:', error);
         throw error; 
       });
   } else {
     return getLike(postId, { token })
-    .then((post) => {        
-      getPosts({token}).then((data) => {
-        setPosts(data);
-        renderApp();
-      });
-    })
+      .then(updatePosts)
       .catch((error) => {
         console.error('Ошибка при лайке:', error);
         throw error; 
