@@ -80,7 +80,6 @@ export function updateLikeButton(postId, isLiked) {
       likeImage.src = './assets/images/like-not-active.svg'; 
     }
   }
-  // renderPost();
 }
 
 const handlePostHeaderClick = (postHeaderElement, userId) => {
@@ -109,6 +108,5 @@ export function initLikeButtonListener(appEl, handleLike) {
 }
 
 export const formatDate = (dateString) => {
-  // return `${Math.round(diffInMs / (1000 * 60))} минут назад`;
   return `${formatDistanceToNow(dateString, {locale:ru, addSuffix:true })}`;
 };
