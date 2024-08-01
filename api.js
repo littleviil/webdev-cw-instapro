@@ -1,8 +1,5 @@
 import { getToken } from "./index.js";
 import { getUserFromLocalStorage } from "./helpers.js";
-
-// Замени на свой, чтобы получить независимый от других набор данных.
-// "боевая" версия инстапро лежит в ключе prod
 const personalKey = "saveleva-elena";
 const baseHost = "https://webdev-hw-api.vercel.app";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
@@ -22,51 +19,10 @@ export function getPosts({ token }) {
       return response.json();
     })
     .then((data) => {
-      console.log('API response:', data);
       return data.posts;
     });
 }
 
-export function getUserPosts({id}) { 
-  return fetch(postsHost + `/user-posts/${id}`, {
-    method: "GET",
-  }).then((response) => {
-    return response.json();
-  }).then((data) => {
-    return data.posts;
-  });
-}
-
-export function getUserId() {
-  const user = getUserFromLocalStorage(); 
-  console.log('Пользователь:', user);
-  if (user) {
-    return user.id;
-  } else {
-    throw new Error('Пользователь не авторизован');
-  }
-}
-export function getUsername() {
-  const userString = localStorage.getItem('user');
-  const user = JSON.parse(userString);
-  return user ? user.username : null;
-}
-
-export function addPost({ description, imageUrl }) {
-  return fetch(postsHost, {
-    method: 'POST',
-    headers: {
-      Authorization: getToken(),
-    },
-    body: JSON.stringify({
-      description,
-      imageUrl,
-    }),
-  })
-  .then((response) => {
-    return response.json();
-  })
-}
 
 // https://github.com/GlebkaF/webdev-hw-api/blob/main/pages/api/user/README.md#%D0%B0%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%D1%81%D1%8F
 export function registerUser({ login, password, name, imageUrl }) {
@@ -112,6 +68,47 @@ export function uploadImage({ file }) {
   }).then((response) => {
     return response.json();
   });
+}
+
+export function addPost({ description, imageUrl }) {
+  return fetch(postsHost, {
+    method: 'POST',
+    headers: {
+      Authorization: getToken(),
+    },
+    body: JSON.stringify({
+      description,
+      imageUrl,
+    }),
+  })
+  .then((response) => {
+    return response.json();
+  })
+}
+
+export function getUserPosts({id}) {
+  return fetch(postsHost + `/user-posts/${id}`, {
+    method: "GET",
+  }).then((response) => {
+    return response.json();
+  }).then((data) => {
+    return data.posts;
+  });
+}
+
+export function getUserId() {
+  const user = getUserFromLocalStorage(); 
+  if (user) {
+    return user.id;
+  } else {
+    throw new Error('Пользователь не авторизован');
+  }
+}
+
+export function getUsername() {
+  const userString = localStorage.getItem('user');
+  const user = JSON.parse(userString);
+  return user ? user.username : null;
 }
 
 export const getLike = (id, { token }) => {

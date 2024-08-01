@@ -1,6 +1,8 @@
-import { getLike, getDislike, getPostsWithToken, getPosts, getUserId, getUserPosts } from './api.js';
-import { appEl, getToken, setPosts, renderApp} from './index.js';
-import { renderPost, renderPostsPageComponent, updateLikeButton } from './components/posts-page-component.js';
+
+import { getLike, getDislike, getPostsWithToken } from './api.js';
+import { getToken, setPosts } from './index.js';
+import { updateLikeButton } from './components/posts-page-component.js';
+
 
 export function saveUserToLocalStorage(user) {
   window.localStorage.setItem("user", JSON.stringify(user));
@@ -27,31 +29,41 @@ export const sanitizeHTML = (htmlString) => {
 };
 
 export function handleLike(postId, isLiked) {
+  
   const token = getToken();
-  const userId = getUserId();
-
-  if (!userId) {
-    console.error('ID пользователя не найден');
-    return;
-  }
-
-  const updatePosts = () => {
-    return getUserPosts({ id: userId }).then((data) => {
-      setPosts(data);
-      renderApp();
-    });
-  };
-
   if (isLiked) {
     return getDislike(postId, { token })
-      .then(updatePosts)
+      .then((post) => {
+        const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
+        if (likeButton) {
+          const likeImage = likeButton.querySelector('img');
+          likeImage.src = './assets/images/like-not-active.svg'; 
+          likeButton.dataset.liked = 'false'; 
+        }
+        return post;
+      })
       .catch((error) => {
         console.error('Ошибка при дизлайке:', error);
         throw error; 
       });
   } else {
     return getLike(postId, { token })
-      .then(updatePosts)
+      .then((post) => {
+        const likeButton = document.querySelector(`[data-post-id="${postId}"]`);
+        if (likeButton) {
+          const likeImage = likeButton.querySelector('img');
+          likeImage.src = './assets/images/like-active.svg'; 
+          likeButton.dataset.liked = 'true'; 
+        }
+        return post;
+      })
+      .then(() => {
+        return getPostsWithToken(); 
+      })
+      .then((newPosts) => {
+        setPosts(newPosts); 
+        updateLikeButton(postId, true);
+      })
       .catch((error) => {
         console.error('Ошибка при лайке:', error);
         throw error; 

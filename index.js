@@ -1,7 +1,6 @@
-console.log("Hello, Webpack!");
 import { getPosts, getUserPosts } from "./api.js";
-import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderUserPageComponent } from "./components/user-post-component.js";
+import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
   ADD_POSTS_PAGE,
@@ -21,13 +20,13 @@ import {
 export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
-export const appEl = document.getElementById("app");
 
 export const getToken = () => {
-  const token = user ? `Bearer ${user.token}` : null;
+  const token = user ? `Bearer ${user.token}` : undefined;
   return token;
 };
 
+let userView;
 export const logout = () => {
   user = null;
   removeUserFromLocalStorage();
@@ -38,8 +37,6 @@ export const logout = () => {
  * Включает страницу приложения
  */
 export const goToPage = (newPage, data) => {
-  console.log('goToPage called with:', newPage, data);
-
   if (
     [
       POSTS_PAGE,
@@ -61,29 +58,26 @@ export const goToPage = (newPage, data) => {
 
       return getPosts({ token: getToken() })
         .then((newPosts) => {
-          console.log('getPosts resolved:', newPosts);
           page = POSTS_PAGE;
           posts = newPosts;
           renderApp();
         })
         .catch((error) => {
-          console.error('Error fetching posts:', error);
+          console.error(error);
           goToPage(POSTS_PAGE);
         });
     }
 
     if (newPage === USER_POSTS_PAGE) {
+      // TODO: реализовать получение постов юзера из API
       return getUserPosts({id: data.userId})
       .then((newPosts) => {
-        console.log('getUserPosts resolved:', newPosts);
         page = USER_POSTS_PAGE;
         posts = newPosts;
         renderApp();
-      })
-      .catch((error) => {
+      }).catch((error) => {
         console.log(error);
-        console.error('Error fetching user posts:', error);
-        goToPage(POSTS_PAGE);
+        goToPage();
       })
     }
 
@@ -95,8 +89,8 @@ export const goToPage = (newPage, data) => {
   throw new Error("страницы не существует");
 };
 
-export const renderApp = () => {
-  console.log('renderApp called with page:', page);
+const renderApp = () => {
+  const appEl = document.getElementById("app");
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
       appEl,
@@ -121,31 +115,30 @@ export const renderApp = () => {
   if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
-      onAddPostClick: ({ description, imageUrl }) => {
+      onAddPostClick({ description, imageUrl }) {
         // TODO: реализовать добавление поста в API
-          console.log('Adding post with description:', description, 'and imageUrl:', imageUrl);
-          goToPage(POSTS_PAGE);
-       },        
+        goToPage(POSTS_PAGE);
+      },
     });
   }
 
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
-      appEl,
-      posts
+      appEl, posts
     });
   }
 
   if (page === USER_POSTS_PAGE) {
+    // TODO: реализовать страницу фотографию пользвателя
     return renderUserPageComponent({
-      appEl,
-      posts
-    })
+      appEl, posts
+    }) 
   }
 };
-   
-    export function setPosts(newPosts) {
-      posts = newPosts;
+
+export function setPosts(newPosts) {
+  posts = newPosts;
 }
 
-  goToPage(POSTS_PAGE);
+
+goToPage(POSTS_PAGE);
