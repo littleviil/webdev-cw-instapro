@@ -98,8 +98,9 @@ export function getUserPosts({id}) {
 
 export function getUserId() {
   const user = getUserFromLocalStorage(); 
+  console.log(user);
   if (user) {
-    return user.id;
+    return user._id;
   } else {
     throw new Error('Пользователь не авторизован');
   }

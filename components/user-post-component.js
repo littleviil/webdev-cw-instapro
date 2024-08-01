@@ -1,6 +1,6 @@
 import { renderHeaderComponent } from "./header-component.js";
-import { formatDate, initLikeButtonListener } from "./posts-page-component.js";
-import { handleLike, sanitizeHTML } from "../helpers.js";
+import { formatDate, updateLikeButton } from "./posts-page-component.js";
+import { handleUserLike, sanitizeHTML } from "../helpers.js";
 
 export function renderUserPageComponent({ appEl, posts }) {
   const renderUserInfo = (user) => {
@@ -65,5 +65,24 @@ export function renderUserPageComponent({ appEl, posts }) {
     element: appEl.querySelector(".header-container"),
   });
 
-  initLikeButtonListener(appEl, handleLike);
+  initUserLikeButtonListener(appEl, handleUserLike);
 };
+
+export function initUserLikeButtonListener(appEl, handleUserLike) {
+  const likesButtons = appEl.querySelectorAll('.like-button');
+  likesButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const id = button.dataset.postId;
+      const isLiked = button.dataset.liked === 'true';
+
+      handleUserLike(id, isLiked)
+        .then(() => {
+          updateLikeButton(id, isLiked);
+        })
+        .catch((error) => {
+          console.error("Ошибка при обработке лайка:", error);
+        });
+    });
+  });
+}
