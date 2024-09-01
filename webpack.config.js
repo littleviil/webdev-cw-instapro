@@ -1,10 +1,10 @@
-/*global module*/
-/*eslint no-undef: ["error", { "typeof": true }] */
-
 module.exports = {
-    entry: "./index.js", // Входной файл, в котором мы пишем свой код
+    
+    entry: "./index.js",
+
     output: {
-        filename: "index.js" // Выходной файл, который подключаем к HTML
-					// Обратите внимание, сохранится он по пути "./dist/main.js"
+
+       filename: "main.js" 
+    
     }
 }

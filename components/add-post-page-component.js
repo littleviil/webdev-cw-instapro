@@ -1,26 +1,27 @@
-import { getToken, goToPage } from "../index.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { renderUploadImageComponent } from "./upload-image-component.js";
 import { addPost } from "../api.js";
-import { POSTS_PAGE } from "../routes.js";
+import { sanitizeHTML } from "../helpers.js";
 
-export function renderAddPostPageComponent({ appEl }) {
-  let imageUrl = '';
-
+export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
   const render = () => {
     const appHtml = `
-    <div class="page-container">
-      <div class="header-container"></div>
-      <div class="form">
-        <h3 class="form-title">Добавить пост</h3>
-        <div class="form-inputs">
-          <div class="upload-image-container"></div>
-          <label>Описание:</label>
-          <textarea class="input textarea" id='textarea-input' rows="4"></textarea>
-          <button class="button" id="add-button">Добавить</button>
+        <div class="page-container">
+          <div class="header-container"></div>
+          <div class="form form-post">
+          <h1 class="form-title">Добавить пост</h1>
+          <div class="form-inputs">
+            <div class="upload-image-container"></div>
+            <div>
+              <h4>Опишите фотографию:</h4>
+              <textarea class="input textarea" rows="10"></textarea>
+              <br/><br/>
+              <button class="button post-button" id="add-button">Добавить</button>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>`;
+        </div>
+      `;
 
     appEl.innerHTML = appHtml;
 
@@ -29,34 +30,25 @@ export function renderAddPostPageComponent({ appEl }) {
     });
 
     renderUploadImageComponent({
-      element: appEl.querySelector(".upload-image-container"),
-      onImageUrlChange(newImageUrl) {
-        imageUrl = newImageUrl;
-      },
+      element: document.querySelector(".upload-image-container")
     });
 
     document.getElementById("add-button").addEventListener("click", () => {
-      const description = document.getElementById('textarea-input');
-      if (description.value === "") {
-        alert('Заполните поле');
-      } else if (!imageUrl) {
-        alert('Добавьте фотографию');
-      } else {
-        addPostToAPI(description.value, imageUrl);
+
+      if (document.querySelector(".file-upload-image") == null) {
+        alert("Загрузите, пожалуйста, изображение");
+        return;       
       }
+      if (document.querySelector(".textarea").value == "") {
+        alert("Добавьте, пожалуйста, описание");
+        return;
+      }
+
+      onAddPostClick(
+        addPost({description: sanitizeHTML(document.querySelector(".textarea").value),
+        imageUrl: document.querySelector(".file-upload-image").src,})
+      );
     });
   };
-
-  const addPostToAPI = (description, imageUrl) => {
-    addPost({ description, imageUrl, token: getToken() })
-      .then(() => {
-        goToPage(POSTS_PAGE);
-      })
-      .catch((error) => {
-        console.error("Ошибка при добавлении поста:", error);
-        alert("Произошла ошибка при добавлении поста. ");
-      });
-  };
-
   render();
 }
