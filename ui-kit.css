@@ -54,6 +54,10 @@ p {
   border: none;
 }
 
+.post-button {
+  width: 100%;
+}
+
 .link-button {
   display: inline;
   border: 0;

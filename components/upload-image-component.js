@@ -39,7 +39,6 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
         lableEl.textContent = "Загружаю файл...";
         uploadImage({ file }).then(({ fileUrl }) => {
           imageUrl = fileUrl;
-          onImageUrlChange(imageUrl);
           render();
         });
       }
@@ -49,7 +48,6 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
       .querySelector(".file-upload-remove-button")
       ?.addEventListener("click", () => {
         imageUrl = "";
-        onImageUrlChange(imageUrl);
         render();
       });
   };
